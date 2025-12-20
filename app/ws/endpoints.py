@@ -6,9 +6,8 @@ import logging
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-@router.websocket("/ws/rates")
+@router.websocket("/rates")
 async def websocket_endpoint(websocket: WebSocket):
-
     await ws_manager.connect(websocket)
 
     try:

@@ -2,11 +2,9 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 from ..config import settings
 
-# Создаем асинхронный движок для SQLite
 engine = create_async_engine(
     settings.database_url,
-    echo=settings.debug,  # Логировать SQL-запросы в debug режиме
-    future=True
+    echo=False,
 )
 
 # Создаем фабрику сессий

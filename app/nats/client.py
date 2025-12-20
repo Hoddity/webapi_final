@@ -1,12 +1,9 @@
-import asyncio
 from typing import Optional
 import json
 from nats.aio.client import Client as NATS
-from nats.aio.errors import ErrConnectionClosed, ErrTimeout
 from ..config import settings
 import logging
 
-# Создаем логгер ТОЛЬКО для файлов, без консоли
 logger = logging.getLogger("nats_file_only")
 
 class NatsClient:
@@ -45,9 +42,9 @@ class NatsClient:
             print(f"NATS получил: {data}")
 
         except json.JSONDecodeError:
-            pass  # Тишина
+            pass
         except Exception:
-            pass  # Тишина
+            pass
 
     async def publish(self, data: dict):
         if self.nc and self.is_connected:

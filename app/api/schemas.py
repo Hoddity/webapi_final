@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional, Dict, Any
 
 class CurrencyRateBase(BaseModel):
-    source: str = "binance"  # По умолчанию binance
+    source: str = "binance"
     btc_usdt: Optional[float] = None
     eth_usdt: Optional[float] = None
     bnb_usdt: Optional[float] = None

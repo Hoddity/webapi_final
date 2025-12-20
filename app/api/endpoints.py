@@ -30,7 +30,7 @@ async def get_rate(
     rate = await service.get_rate_by_id(rate_id)
 
     if not rate:
-        raise HTTPException(status_code=404, detail="Rate not found")
+        raise HTTPException(status_code=404, detail="Курсы валют не найдены")
 
     return rate
 
@@ -44,7 +44,7 @@ async def create_rate(
     rate = await service.save_currency_rate(rate_data.dict())
 
     if not rate:
-        raise HTTPException(status_code=400, detail="Failed to create rate")
+        raise HTTPException(status_code=400, detail="Ошибка создания курса валюты")
 
     nats_data = {
         "event_type": "rate_created",
@@ -67,7 +67,7 @@ async def delete_rate(
     rate = result.scalar_one_or_none()
 
     if not rate:
-        raise HTTPException(status_code=404, detail="Rate not found")
+        raise HTTPException(status_code=404, detail="Курс валюты не найден")
 
     rate_data = rate.to_dict()
 
@@ -81,14 +81,14 @@ async def delete_rate(
     }
     await nats_client.publish(nats_data)
 
-    return {"message": "Rate deleted successfully"}
+    return {"message": "Курс валюты успешно удален"}
 
 @router.post("/tasks/run", response_model=schemas.TaskResponse)
 async def run_task():
 
     try:
         await background_task.run_manually()
-        return {"message": "Background task executed successfully"}
+        return {"message": "Фоновая задача успешно запущена"}
     except Exception as e:
-        logger.error(f"Error executing task: {e}")
+        logger.error(f"Ошибка запуска фоновой задачи: {e}")
         raise HTTPException(status_code=500, detail=str(e))

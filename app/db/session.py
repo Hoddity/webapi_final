@@ -7,7 +7,6 @@ engine = create_async_engine(
     echo=False,
 )
 
-# Создаем фабрику сессий
 AsyncSessionLocal = sessionmaker(
     engine,
     class_=AsyncSession,
@@ -15,10 +14,6 @@ AsyncSessionLocal = sessionmaker(
 )
 
 async def get_db():
-    """
-    Dependency для получения сессии БД.
-    Используется в эндпоинтах FastAPI.
-    """
     async with AsyncSessionLocal() as session:
         try:
             yield session
@@ -26,15 +21,9 @@ async def get_db():
             await session.close()
 
 async def init_db():
-    """
-    Инициализация БД - создание таблиц.
-    Вызывается при старте приложения.
-    """
-    from app.models.currency import CurrencyRate
     from app.db.base import Base
 
     async with engine.begin() as conn:
-        # Создаем все таблицы
         await conn.run_sync(Base.metadata.create_all)
 
-    print("Database initialized")
+    print("База данных инициализирована")

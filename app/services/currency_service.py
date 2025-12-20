@@ -18,7 +18,6 @@ class CurrencyService:
     async def fetch_binance_rates(self) -> Optional[Dict[str, Any]]:
         try:
             async with httpx.AsyncClient() as client:
-                # Получаем основные крипто-пары
                 symbols = ["BTCUSDT", "ETHUSDT", "BNBUSDT", "EURUSDT"]
                 results = {}
 
@@ -33,10 +32,10 @@ class CurrencyService:
                             results[symbol] = float(data.get("price", 0))
                         else:
                             results[symbol] = None
-                            logger.warning(f"Symbol {symbol} not found or error: {response.status_code}")
+                            logger.warning(f"Символ {symbol} не найден или ошибка: {response.status_code}")
                     except Exception as e:
                         results[symbol] = None
-                        logger.error(f"Error fetching {symbol}: {e}")
+                        logger.error(f"Ошибка получения {symbol}: {e}")
 
                 return {
                     "source": "binance",
@@ -48,7 +47,7 @@ class CurrencyService:
                 }
 
         except Exception as e:
-            logger.error(f"Error fetching Binance rates: {e}")
+            logger.error(f"Ошибка получения курсов с Binance: {e}")
             return None
 
 
@@ -59,12 +58,12 @@ class CurrencyService:
             await self.db.commit()
             await self.db.refresh(currency_rate)
 
-            logger.debug(f"Saved currency rate from {data['source']}")
+            logger.debug(f"Сохраненный курс валюты из {data['source']}")
             return currency_rate
 
         except Exception as e:
             await self.db.rollback()
-            logger.error(f"Error saving currency rate: {e}")
+            logger.error(f"Ошибка сохранения курса валюты из: {e}")
             return None
 
     async def get_latest_rates(self, limit: int = 10):
